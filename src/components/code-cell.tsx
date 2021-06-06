@@ -1,17 +1,25 @@
-import { useState } from 'react'
-import CodeEditor from './code-editor'
-import Preview from './preview'
+import { useState, useEffect } from 'react'
 import bundle from '../bundler'
 import Resizable from './resizable'
+import CodeEditor from './code-editor'
+import Preview from './preview'
 
 const CodeCell = () => {
   const [input, setInput] = useState('')
   const [code, setCode] = useState('')
+  const [error, setError] = useState('')
 
-  const onClick = async () => {
-    const output = await bundle(input)
-    setCode(output)
-  }
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const output = await bundle(input)
+      setCode(output.code)
+      setError(output.error)
+    }, 750)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [input])
 
   return (
     <Resizable direction='vertical'>
@@ -19,7 +27,7 @@ const CodeCell = () => {
         <Resizable direction='horizontal'>
           <CodeEditor initialValue='' onChange={(value) => setInput(value)} />
         </Resizable>
-        <Preview code={code} />
+        <Preview code={code} error={error} />
       </div>
     </Resizable>
   )

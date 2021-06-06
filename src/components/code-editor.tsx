@@ -12,7 +12,7 @@ interface CodeEditorProps {
   onChange(value: string): void
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ onChange, initialValue }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const editorRef = useRef<any>()
 
   const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
